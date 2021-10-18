@@ -1,9 +1,12 @@
 import secrets
 from typing import List, Union
-from pydantic import AnyHttpUrl, BaseSettings, validator
+from pydantic import BaseSettings, AnyHttpUrl, validator
 
 
 class Settings(BaseSettings):
+    PROJECT_NAME: str = "neat"
+    SQLALCHEMY_DATABASE_URL: str = "sqlite:///./sql_app.db"
+
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
     # 60 minutes * 24 hours * 8 days = 8 days
@@ -17,9 +20,6 @@ class Settings(BaseSettings):
         elif isinstance(v, (list, str)):
             return v
         raise ValueError(v)
-
-    PROJECT_NAME: str = "neat"
-    SQLALCHEMY_DATABASE_URL: str = "sqlite:///./sql_app.db"
 
     class Config:
         case_sensitive = True
