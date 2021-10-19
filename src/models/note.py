@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, DateTime, Text
 from sqlalchemy.orm import relationship
 
 from src.database.base_class import Base
@@ -13,5 +13,6 @@ class Note(Base):
     author = Column(Integer, ForeignKey("user.id"))
     created_at = Column(DateTime(timezone=True))
     modified_at = Column(DateTime(timezone=True))
+    public = Column(Boolean, index=True)
 
-    owner = relationship("User", back_populates="notes")
+    author_id = relationship("User", back_populates="notes")
