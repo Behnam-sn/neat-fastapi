@@ -14,4 +14,4 @@ class User(Base):
     created_at = Column(DateTime(timezone=True))
     modified_at = Column(DateTime(timezone=True))
 
-    notes = relationship("Note", back_populates="owner")
+    notes = relationship("Note", back_populates="author_id")
