@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 
-from src.database.base_class import Base
+from src.database.session import Base
+
+if TYPE_CHECKING:
+    from .note import Note
 
 
 class User(Base):

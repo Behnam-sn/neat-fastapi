@@ -32,7 +32,7 @@ def get_notes_by_author(db: Session, author: str, skip: int = 0, limit: int = 10
 def get_public_notes(db: Session, skip: int = 0, limit: int = 100) -> List[Note]:
     return (
         db.query(Note)
-        .filter(Note.public == true)
+        .filter(Note.public == 1)
         .offset(skip)
         .limit(limit)
         .all()

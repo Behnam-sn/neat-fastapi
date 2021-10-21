@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -30,7 +30,7 @@ def get_public_notes(skip: int = 0, limit: int = 100, db: Session = Depends(deps
 @router.get("/{author}", response_model=List[schemas.Note])
 def get_notes_by_author(
     author: str,
-    current_user: models.User = Depends(deps.get_current_user),
+    current_user: Optional[models.User] = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
 ):
     if author == current_user.username:
@@ -42,15 +42,27 @@ def get_notes_by_author(
 
 
 @router.get("/{id}", response_model=schemas.Note)
-def get_note_by_id():
+def get_note_by_id(
+    id: int,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+):
     pass
 
 
 @router.put("/{id}", response_model=schemas.Note)
-def update_note():
+def update_note(
+    id: int,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+):
     pass
 
 
 @router.delete("/{id}", response_model=schemas.Note)
-def delete_note():
+def delete_note(
+    id: int,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+):
     pass
