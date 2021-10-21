@@ -1,6 +1,5 @@
 from typing import List, Optional
 
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import true
 
@@ -8,13 +7,12 @@ from src.models.note import Note
 from src.schemas.note import NoteCreate, NoteUpdate
 
 
-def create_note(db: Session, obj_in: NoteCreate, author: str) -> Note:
-    obj_in_data = jsonable_encoder(obj_in)
-    db_obj = Note(**obj_in_data, author=author)
-    db.add(db_obj)
+def create_note(db: Session, note: NoteCreate, author: str) -> Note:
+    db_note = Note(**note, author=author)
+    db.add(db_note)
     db.commit()
-    db.refresh(db_obj)
-    return db_obj
+    db.refresh(db_note)
+    return db_note
 
 
 def get_note_by_id(db: Session, id: int) -> Optional[Note]:
@@ -31,7 +29,7 @@ def get_notes_by_author(db: Session, author: str, skip: int = 0, limit: int = 10
     )
 
 
-def get_notes_by_public(db: Session, skip: int = 0, limit: int = 100) -> List[Note]:
+def get_public_notes(db: Session, skip: int = 0, limit: int = 100) -> List[Note]:
     return (
         db.query(Note)
         .filter(Note.public == true)

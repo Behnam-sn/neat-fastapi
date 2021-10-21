@@ -12,6 +12,10 @@ def get_user_by_username(db: Session, username: str) -> Optional[User]:
     return db.query(User).filter(User.username == username).first()
 
 
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(User).offset(skip).limit(limit).all()
+
+
 def create_user(db: Session, obj_in: UserCreate) -> User:
     db_obj = User(
         username=obj_in.username,
