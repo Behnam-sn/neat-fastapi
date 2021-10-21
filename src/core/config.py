@@ -5,7 +5,7 @@ from pydantic import BaseSettings, AnyHttpUrl, validator
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "neat"
-    SQLALCHEMY_DATABASE_URL: str = "sqlite:///./sql_app.db"
+    SQLALCHEMY_DATABASE_URL: str = "sqlite:///./db.db"
 
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
