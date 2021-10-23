@@ -14,10 +14,8 @@ class NoteCreate(NoteBase):
     pass
 
 
-class NoteUpdate(BaseModel):
-    title: Optional[str] = None
-    content: Optional[str] = None
-    public: Optional[bool] = None
+class NoteUpdate(NoteBase):
+    pass
 
 
 class Note(NoteBase):
