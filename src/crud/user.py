@@ -31,47 +31,23 @@ def create_user(db: Session, user: UserCreate) -> User:
     return db_user
 
 
-def update_user(db: Session, username: str, user: UserUpdate) -> User:
-    db_user = db.query(User).filter(User.username == username)
-    stored_user_model = User(**db_user.first())
-    update_data = user.dict(exclude_unset=True)
+def update_user(db: Session, username: str, user_update: UserUpdate) -> User:
+    db_user = db.query(User).filter(User.username == username).first()
+
+    update_data = user_update.dict(exclude_unset=True)
+    update_data["modified_at"] = datetime.datetime.now()
 
     if update_data["password"]:
         hashed_password = get_password_hash(update_data["password"])
         del update_data["password"]
         update_data["hashed_password"] = hashed_password
 
-    update_data["modified_at"] = datetime.datetime.now()
+    for field, value in update_data.items():
+        setattr(db_user, field, value)
 
-    updated_user = stored_user_model.copy(update=update_data)
-
-    db_user.update(jsonable_encoder(updated_user), synchronize_session=False)
     db.commit()
     db.refresh(db_user)
     return db_user
-
-
-# def update_user(db: Session, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]) -> User:
-#     obj_data = jsonable_encoder(db_obj)
-
-#     if isinstance(obj_in, dict):
-#         update_data = obj_in
-#     else:
-#         update_data = obj_in.dict(exclude_unset=True)
-
-#     if update_data["password"]:
-#         hashed_password = get_password_hash(update_data["password"])
-#         del update_data["password"]
-#         update_data["hashed_password"] = hashed_password
-
-#     for field in obj_data:
-#         if field in update_data:
-#             setattr(db_obj, field, update_data[field])
-
-#     db.add(db_obj)
-#     db.commit()
-#     db.refresh(db_obj)
-#     return db_obj
 
 
 def remove_user(db: Session, username: str) -> User:
