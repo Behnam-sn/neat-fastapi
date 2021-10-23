@@ -36,17 +36,26 @@ def get_user(
 
 @router.put("/", response_model=schemas.User)
 def update_user(
-    user: schemas.UserUpdate,
+    user_update: schemas.UserUpdate,
     current_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db)
 ):
 
-    db_user = crud.get_user(db, username=current_user.username)
+    db_user = crud.get_user_by_username(db, username=current_user.username)
 
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return crud.update_user(db, username=current_user.username, user=user)
+    if current_user.username != user_update.username:
+        new_name = crud.get_user_by_username(db, username=user_update.username)
+
+        if new_name:
+            raise HTTPException(
+                status_code=400,
+                detail="Username already registered"
+            )
+
+    return crud.update_user(db, username=current_user.username, user_update=user_update)
 
 
 @router.delete("/", response_model=schemas.User)
