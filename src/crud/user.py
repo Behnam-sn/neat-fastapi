@@ -2,23 +2,13 @@ import datetime
 from typing import Optional
 
 from sqlalchemy.orm import Session
-from fastapi.encoders import jsonable_encoder
 
 from src.core.security import get_password_hash, verify_password
-from src.models.user import User
-from src.schemas.user import UserCreate, UserUpdate
+from src import models, schemas
 
 
-def get_user_by_username(db: Session, username: str) -> Optional[User]:
-    return db.query(User).filter(User.username == username).first()
-
-
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(User).offset(skip).limit(limit).all()
-
-
-def create_user(db: Session, user: UserCreate) -> User:
-    db_user = User(
+def create_user(db: Session, user: schemas.UserCreate) -> models.User:
+    db_user = models.User(
         username=user.username,
         hashed_password=get_password_hash(user.password),
         full_name=user.full_name,
@@ -31,7 +21,15 @@ def create_user(db: Session, user: UserCreate) -> User:
     return db_user
 
 
-def update_user(db: Session, username: str, user_update: UserUpdate) -> User:
+def get_user_by_username(db: Session, username: str) -> Optional[models.User]:
+    return db.query(models.User).filter(models.User.username == username).first()
+
+
+def get_users(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.User).offset(skip).limit(limit).all()
+
+
+def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> models.User:
     db_user = get_user_by_username(db, username=username)
 
     update_data = user_update.dict(exclude_unset=True)
@@ -50,14 +48,14 @@ def update_user(db: Session, username: str, user_update: UserUpdate) -> User:
     return db_user
 
 
-def remove_user(db: Session, username: str) -> User:
+def remove_user(db: Session, username: str) -> models.User:
     user = get_user_by_username(db, username=username)
     db.delete(user)
     db.commit()
     return user
 
 
-def authenticate_user(db: Session, username: str, password: str) -> Optional[User]:
+def authenticate_user(db: Session, username: str, password: str) -> Optional[models.User]:
     user = get_user_by_username(db, username=username)
 
     if not user:

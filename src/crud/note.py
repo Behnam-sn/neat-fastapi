@@ -2,8 +2,6 @@ import datetime
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy.sql.expression import true
 
 from src import models, schemas
 
