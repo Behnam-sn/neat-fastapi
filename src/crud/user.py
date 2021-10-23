@@ -31,8 +31,8 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> models.User:
     db_user = get_user_by_username(db, username=username)
-
     update_data = user_update.dict(exclude_unset=True)
+
     update_data["modified_at"] = datetime.datetime.now()
 
     if update_data["password"]:
@@ -42,6 +42,13 @@ def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> 
 
     for field, value in update_data.items():
         setattr(db_user, field, value)
+
+    if update_data["username"]:
+        db_notes = db.query(models.Note).filter(
+            models.Note.author == username).all()
+
+        for note in db_notes:
+            setattr(note, "author", update_data["username"])
 
     db.commit()
     db.refresh(db_user)
