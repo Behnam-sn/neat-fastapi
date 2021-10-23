@@ -32,7 +32,7 @@ def create_user(db: Session, user: UserCreate) -> User:
 
 
 def update_user(db: Session, username: str, user_update: UserUpdate) -> User:
-    db_user = db.query(User).filter(User.username == username).first()
+    db_user = get_user_by_username(db, username=username)
 
     update_data = user_update.dict(exclude_unset=True)
     update_data["modified_at"] = datetime.datetime.now()
