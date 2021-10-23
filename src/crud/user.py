@@ -58,6 +58,10 @@ def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> 
 def remove_user(db: Session, username: str) -> models.User:
     user = get_user_by_username(db, username=username)
     db.delete(user)
+
+    db.query(models.Note).filter(
+        models.Note.author == username).delete(synchronize_session=False)
+
     db.commit()
     return user
 
