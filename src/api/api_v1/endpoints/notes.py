@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -58,7 +58,7 @@ def create_note(
 
 @router.get("/", response_model=List[schemas.Note])
 def get_current_user_notes(
-    current_user: Optional[models.User] = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
 ):
     return crud.get_notes_by_author(db, author=current_user.username)
@@ -67,7 +67,7 @@ def get_current_user_notes(
 @router.get("/id", response_model=schemas.Note)
 def get_note_by_id(
     id: int,
-    current_user: Optional[models.User] = Depends(deps.get_current_user),
+    current_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
 ):
     db_note = crud.get_note_by_id(db, id=id)
