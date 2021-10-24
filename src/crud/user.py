@@ -56,23 +56,23 @@ def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> 
 
 
 def remove_user(db: Session, username: str) -> models.User:
-    user = get_user_by_username(db, username=username)
-    db.delete(user)
+    db_user = get_user_by_username(db, username=username)
+    db.delete(db_user)
 
     db.query(models.Note).filter(
         models.Note.author == username).delete(synchronize_session=False)
 
     db.commit()
-    return user
+    return db_user
 
 
 def authenticate_user(db: Session, username: str, password: str) -> Optional[models.User]:
-    user = get_user_by_username(db, username=username)
+    db_user = get_user_by_username(db, username=username)
 
-    if not user:
+    if not db_user:
         return None
 
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, db_user.hashed_password):
         return None
 
-    return user
+    return db_user
