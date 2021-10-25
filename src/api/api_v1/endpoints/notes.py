@@ -15,7 +15,7 @@ def get_all_public_notes(
     limit: int = 100,
     db: Session = Depends(deps.get_db)
 ):
-    return crud.get_public_notes(db, skip=skip, limit=limit)
+    return crud.get_all_public_notes(db, skip=skip, limit=limit)
 
 
 @router.get("/public-author", response_model=List[schemas.Note])

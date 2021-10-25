@@ -19,7 +19,7 @@ def create_note(db: Session, note: schemas.NoteCreate, author: str) -> models.No
     return db_note
 
 
-def get_public_notes(db: Session, skip: int = 0, limit: int = 100) -> List[models.Note]:
+def get_all_public_notes(db: Session, skip: int = 0, limit: int = 100) -> List[models.Note]:
     return (
         db.query(models.Note)
         .filter(models.Note.public == 1)

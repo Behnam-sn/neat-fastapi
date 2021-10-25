@@ -3,13 +3,7 @@ from sqlalchemy.orm import Session
 from src import crud
 from src.core.security import verify_password
 from src.schemas.user import UserCreate, UserUpdate
-from src.tests.utils.utils import random_lower_string
-
-username = "tywfamvyczuoqcvetzzvlzvxfqpcijco"
-password = "baxpmyntxcclbiblrxtpersdfublkkor"
-
-new_username = "rfzmehwlzifvlbdiyhvksedcghhllnsh"
-new_password = "ddnvbdeublblxnbwrgbazksjnbynmxix"
+from src.tests.utils.utils import random_lower_string, username, new_username, password, new_password
 
 
 def test_create_user(db: Session):
