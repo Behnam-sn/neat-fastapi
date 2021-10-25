@@ -38,6 +38,11 @@ def test_not_authenticate_user(db: Session):
     assert user is None
 
 
+def test_get_all_user(db: Session):
+    users = crud. get_users(db)
+    assert users
+
+
 def test_get_user(db: Session):
     user = crud.get_user_by_username(db, username=username)
     assert user
