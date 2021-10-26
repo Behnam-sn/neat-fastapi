@@ -5,6 +5,15 @@ from src.tests.utils.user import user_authentication_headers
 from src.tests.utils.utils import random_lower_string, username, password, new_username, new_password
 
 
+def test_create_existing_user(client: TestClient):
+    data = {"username": username, "password": password}
+
+    response = client.post(
+        f"{settings.API_V1_STR}/login/signup", json=data
+    )
+    assert response.status_code == 400
+
+
 def test_get_all_users(client: TestClient):
     response = client.get(
         f"{settings.API_V1_STR}/users/all"
