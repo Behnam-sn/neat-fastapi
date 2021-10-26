@@ -67,7 +67,6 @@ def test_remove_note(db: Session):
     note = creat_random_note(db, public=False, author=username)
     delete_note = crud.remove_note(db, id=note.id)
     stored_note = crud.get_note_by_id(db, id=note.id)
-
-    delete_the_random_user(db)
     assert stored_note is None
     assert delete_note == note
+    delete_the_random_user(db)
