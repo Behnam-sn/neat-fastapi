@@ -41,11 +41,16 @@ def test_create_existing_user():
     assert response.status_code == 400
 
 
-# def test_get_all_users(client: TestClient):
-#     response = client.get(
-#         f"{settings.API_V1_STR}/users/all"
-#     )
-#     assert response.status_code == 200
+def test_get_all_users():
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+
+    response = client.get(
+        f"{settings.API_V1_STR}/users/all"
+    )
+    assert response.status_code == 200
 
 
 def test_get_user():
