@@ -25,8 +25,8 @@ def test_create_note():
         headers=token,
         json=data
     )
-
     note = response.json()
+
     assert note["author"] == username
     assert note["title"] == data["title"]
     assert note["content"] == data["content"]
@@ -40,13 +40,14 @@ def test_get_current_user_notes(db: Session):
     create_random_user_by_api(username=username, password=password)
     token = user_authentication_headers(username=username, password=password)
 
-    creat_random_note(db, public=True, author=username)
+    creat_random_note(db, public=False, author=username)
 
     response = client.get(
         f"{settings.API_V1_STR}/notes/",
         headers=token,
     )
     notes = response.json()
+
     assert len(notes) == 1
 
 
@@ -56,14 +57,14 @@ def test_get_note_by_id(db: Session):
 
     create_random_user_by_api(username=username, password=password)
     token = user_authentication_headers(username=username, password=password)
-    note = creat_random_note(db, public=True, author=username)
+    note = creat_random_note(db, public=False, author=username)
 
     response = client.get(
         f"{settings.API_V1_STR}/notes/id/?id={note.id}",
         headers=token,
     )
-
     stored_note = response.json()
+
     assert stored_note["author"] == note.author
     assert stored_note["title"] == note.title
     assert stored_note["content"] == note.content
@@ -76,7 +77,7 @@ def test_update_note(db: Session):
 
     create_random_user_by_api(username=username, password=password)
     token = user_authentication_headers(username=username, password=password)
-    note = creat_random_note(db, public=True, author=username)
+    note = creat_random_note(db, public=False, author=username)
 
     data = {
         "title": random_lower_string(),
@@ -89,8 +90,8 @@ def test_update_note(db: Session):
         headers=token,
         json=data
     )
-
     new_note = response.json()
+
     assert new_note["author"] == username
     assert new_note["title"] == data["title"]
     assert new_note["content"] == data["content"]
@@ -103,7 +104,7 @@ def test_delete_note(db: Session):
 
     create_random_user_by_api(username=username, password=password)
     token = user_authentication_headers(username=username, password=password)
-    note = creat_random_note(db, public=True, author=username)
+    note = creat_random_note(db, public=False, author=username)
 
     response = client.delete(
         f"{settings.API_V1_STR}/notes/?id={note.id}",
@@ -111,3 +112,54 @@ def test_delete_note(db: Session):
     )
 
     assert response.status_code == 200
+
+
+def test_get_all_public_notes(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    creat_random_note(db, public=True, author=username)
+
+    response = client.get(
+        f"{settings.API_V1_STR}/notes/public-all",
+    )
+    notes = response.json()
+
+    assert response.status_code == 200
+    assert len(notes) >= 1
+
+
+def test_get_public_notes_by_author(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    creat_random_note(db, public=True, author=username)
+
+    response = client.get(
+        f"{settings.API_V1_STR}/notes/public-author?author={username}",
+    )
+    notes = response.json()
+
+    assert response.status_code == 200
+    assert len(notes) == 1
+
+
+def test_get_public_note_by_id(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    note = creat_random_note(db, public=True, author=username)
+
+    response = client.get(
+        f"{settings.API_V1_STR}/notes/public-id?id={note.id}",
+    )
+    stored_note = response.json()
+
+    assert response.status_code == 200
+    assert stored_note["author"] == note.author
+    assert stored_note["title"] == note.title
+    assert stored_note["content"] == note.content
+    assert stored_note["public"] == note.public
