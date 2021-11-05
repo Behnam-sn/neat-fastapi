@@ -15,7 +15,7 @@ def test_create_user():
     }
 
     response = client.post(
-        f"{settings.API_V1_STR}/login/signup",
+        f"{settings.API_V1_STR}/auth/signup",
         json=data
     )
 
@@ -34,7 +34,7 @@ def test_create_existing_user():
     }
 
     response = client.post(
-        f"{settings.API_V1_STR}/login/signup",
+        f"{settings.API_V1_STR}/auth/signup",
         json=data
     )
 

@@ -17,7 +17,7 @@ def test_login():
     }
 
     response = client.post(
-        f"{settings.API_V1_STR}/login/token",
+        f"{settings.API_V1_STR}/auth/login",
         data=data
     )
     tokens = response.json()

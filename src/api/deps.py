@@ -11,7 +11,7 @@ from src.core.config import settings
 from src.database.session import SessionLocal
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_V1_STR}/login/token"
+    tokenUrl=f"{settings.API_V1_STR}/auth/login"
 )
 
 

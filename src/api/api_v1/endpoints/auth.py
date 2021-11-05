@@ -26,7 +26,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@router.post("/token", response_model=schemas.Token)
+@router.post("/login", response_model=schemas.Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
 
     user = crud.user.authenticate_user(
