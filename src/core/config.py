@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
         "http://localhost:8080",
-        "https://localhost:8080"
+        "https://localhost:8080",
     ]
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
