@@ -13,7 +13,7 @@ from src.core.config import settings
 router = APIRouter()
 
 
-@router.post("/signup", response_model=schemas.User)
+@router.post("/signup")
 def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
     db_user = crud.get_user_by_username(db, username=user.username)
 
@@ -23,7 +23,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
             detail="Username already registered"
         )
 
-    return crud.create_user(db=db, user=user)
+    crud.create_user(db=db, user=user)
 
 
 @router.post("/login", response_model=schemas.Token)
