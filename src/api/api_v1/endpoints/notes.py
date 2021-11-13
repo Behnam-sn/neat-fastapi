@@ -78,9 +78,6 @@ def get_note_by_id(
     if db_note.author != current_user.username and db_note.public == 0:
         raise HTTPException(status_code=204, detail="Note is not Public")
 
-    # if db_note.author != current_user.username:
-        # raise HTTPException(status_code=400, detail="Permission denied")
-
     return db_note
 
 
