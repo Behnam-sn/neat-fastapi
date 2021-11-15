@@ -20,10 +20,11 @@ def get_all_users(
 
 @router.get("/", response_model=schemas.User)
 def get_user(
-    current_user: models.User = Depends(deps.get_current_user),
+    # current_user: models.User = Depends(deps.get_current_user),
+    username: str,
     db: Session = Depends(deps.get_db),
 ):
-    db_user = crud.get_user_by_username(db, username=current_user.username)
+    db_user = crud.get_user_by_username(db, username=username)
 
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
