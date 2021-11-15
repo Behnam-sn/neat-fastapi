@@ -33,22 +33,30 @@ def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> 
     db_user = get_user_by_username(db, username=username)
     update_data = user_update.dict(exclude_unset=True)
 
-    update_data["modified_at"] = datetime.datetime.now()
+    # update_data["modified_at"] = datetime.datetime.now()
 
-    if update_data["password"]:
-        hashed_password = get_password_hash(update_data["password"])
-        del update_data["password"]
-        update_data["hashed_password"] = hashed_password
-
-    for field, value in update_data.items():
-        setattr(db_user, field, value)
-
-    if update_data["username"]:
+    if db_user.username != update_data["username"]:
         db_notes = db.query(models.Note).filter(
             models.Note.author == username).all()
 
         for note in db_notes:
             setattr(note, "author", update_data["username"])
+
+        setattr(db_user, "username", update_data["username"])
+
+    if db_user.full_name != update_data["full_name"]:
+        setattr(db_user, "full_name", update_data["full_name"])
+
+    # if "password" in update_data:
+        # hashed_password = get_password_hash(update_data["password"])
+        # del update_data["password"]
+        # update_data["hashed_password"] = hashed_password
+        # setattr(db_user, "hashed_password", hashed_password)
+
+    setattr(db_user, "modified_at", datetime.datetime.now())
+
+    # for field, value in update_data.items():
+    #     setattr(db_user, field, value)
 
     db.commit()
     db.refresh(db_user)

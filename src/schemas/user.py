@@ -14,7 +14,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
-    username: Optional[str] = None
+    full_name: str
     password: Optional[str] = None
 
 
