@@ -55,6 +55,29 @@ def update_user(
     return crud.update_user(db, username=current_user.username, user_update=user_update)
 
 
+@router.put("/password", response_model=schemas.User)
+def change_password(
+    password_update: schemas.PasswordUpdate,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db)
+):
+    db_user = crud.get_user_by_username(db, username=current_user.username)
+
+    if db_user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    if crud.authenticate_user(db, username=current_user.username, password=password_update.password) is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Not Authenticated"
+        )
+
+    return crud.update_password(db, username=current_user.username, new_password=password_update.new_password)
+
+
 @router.delete("/", response_model=schemas.User)
 def delete_user(
     password: str,

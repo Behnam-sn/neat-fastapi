@@ -18,6 +18,11 @@ class UserUpdate(UserBase):
     password: Optional[str] = None
 
 
+class PasswordUpdate(BaseModel):
+    password: str
+    new_password: str
+
+
 class User(UserBase):
     id: int
     created_at: datetime
