@@ -57,6 +57,7 @@ def update_user(
 
 @router.delete("/", response_model=schemas.User)
 def delete_user(
+    password: str,
     current_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db)
 ):
@@ -64,5 +65,11 @@ def delete_user(
 
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
+
+    if crud.authenticate_user(db, username=current_user.username, password=password) is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Not Authenticated"
+        )
 
     return crud.remove_user(db, username=current_user.username)
