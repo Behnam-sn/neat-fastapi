@@ -1,5 +1,4 @@
 from typing import Optional
-from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -25,8 +24,8 @@ class PasswordUpdate(BaseModel):
 
 class User(UserBase):
     id: int
-    created_at: datetime
-    modified_at: datetime
+    created_at: str
+    modified_at: str
 
     class Config:
         orm_mode = True

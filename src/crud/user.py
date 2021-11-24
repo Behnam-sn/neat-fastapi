@@ -12,8 +12,8 @@ def create_user(db: Session, user: schemas.UserCreate) -> models.User:
         username=user.username,
         hashed_password=get_password_hash(user.password),
         full_name=user.full_name,
-        created_at=datetime.datetime.now(),
-        modified_at=datetime.datetime.now(),
+        created_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
+        modified_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
     )
     db.add(db_user)
     db.commit()
@@ -60,7 +60,8 @@ def update_password(db: Session, username: str, new_password: str) -> models.Use
 
     hashed_password = get_password_hash(new_password)
     setattr(db_user, "hashed_password", hashed_password)
-    setattr(db_user, "modified_at", datetime.datetime.now())
+    setattr(db_user, "modified_at",
+            datetime.datetime.now().strftime("%Y/%m/%d %H:%M"))
 
     db.commit()
     db.refresh(db_user)

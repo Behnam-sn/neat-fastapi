@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, DateTime, Text
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Text
 from sqlalchemy.orm import relationship
 
 from src.database.session import Base
@@ -12,7 +12,7 @@ class Note(Base):
     content = Column(Text, index=True)
     public = Column(Boolean, index=True)
     author = Column(String, ForeignKey("users.username"))
-    created_at = Column(DateTime(timezone=True))
-    modified_at = Column(DateTime(timezone=True))
+    created_at = Column(Text)
+    modified_at = Column(Text)
 
     author_id = relationship("User", back_populates="notes")

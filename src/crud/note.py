@@ -10,8 +10,8 @@ def create_note(db: Session, note: schemas.NoteCreate, author: str) -> models.No
     db_note = models.Note(
         **note.dict(),
         author=author,
-        created_at=datetime.datetime.now(),
-        modified_at=datetime.datetime.now(),
+        created_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
+        modified_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
     )
     db.add(db_note)
     db.commit()
@@ -61,7 +61,8 @@ def update_note(db: Session, id: int, note_update: schemas.NoteUpdate) -> models
     db_note = get_note_by_id(db, id=id)
 
     update_data = note_update.dict(exclude_unset=True)
-    update_data["modified_at"] = datetime.datetime.now()
+    update_data["modified_at"] = datetime.datetime.now().strftime(
+        "%Y/%m/%d %H:%M"),
 
     for field, value in update_data.items():
         setattr(db_note, field, value)
