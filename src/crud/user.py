@@ -45,7 +45,8 @@ def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> 
     if db_user.full_name != update_data["full_name"]:
         setattr(db_user, "full_name", update_data["full_name"])
 
-    setattr(db_user, "modified_at", datetime.datetime.now())
+    setattr(db_user, "modified_at",
+            datetime.datetime.now().strftime("%Y/%m/%d %H:%M"))
 
     # for field, value in update_data.items():
     #     setattr(db_user, field, value)
