@@ -6,12 +6,16 @@ from sqlalchemy.orm import Session
 from src import models, schemas
 
 
+def now():
+    return datetime.datetime.now().strftime("%Y/%m/%d %H:%M")
+
+
 def create_note(db: Session, note: schemas.NoteCreate, author: str) -> models.Note:
     db_note = models.Note(
         **note.dict(),
         author=author,
-        created_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
-        modified_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
+        created_at=now(),
+        modified_at=now(),
     )
     db.add(db_note)
     db.commit()
@@ -22,6 +26,7 @@ def create_note(db: Session, note: schemas.NoteCreate, author: str) -> models.No
 def get_all_public_notes(db: Session, skip: int = 0, limit: int = 100) -> List[models.Note]:
     return (
         db.query(models.Note)
+        .order_by(models.Note.id.desc())
         .filter(models.Note.public == 1)
         .offset(skip)
         .limit(limit)
@@ -32,6 +37,7 @@ def get_all_public_notes(db: Session, skip: int = 0, limit: int = 100) -> List[m
 def get_public_notes_by_author(db: Session, author: str, skip: int = 0, limit: int = 100) -> List[models.Note]:
     return (
         db.query(models.Note)
+        .order_by(models.Note.id.desc())
         .filter(models.Note.author == author, models.Note.public == 1)
         .offset(skip)
         .limit(limit)
@@ -42,6 +48,7 @@ def get_public_notes_by_author(db: Session, author: str, skip: int = 0, limit: i
 def get_notes_by_author(db: Session, author: str, skip: int = 0, limit: int = 100) -> List[models.Note]:
     return (
         db.query(models.Note)
+        .order_by(models.Note.id.desc())
         .filter(models.Note.author == author)
         .offset(skip)
         .limit(limit)
@@ -61,8 +68,7 @@ def update_note(db: Session, id: int, note_update: schemas.NoteUpdate) -> models
     db_note = get_note_by_id(db, id=id)
 
     update_data = note_update.dict(exclude_unset=True)
-    update_data["modified_at"] = datetime.datetime.now().strftime(
-        "%Y/%m/%d %H:%M")
+    update_data["modified_at"] = now()
 
     for field, value in update_data.items():
         setattr(db_note, field, value)

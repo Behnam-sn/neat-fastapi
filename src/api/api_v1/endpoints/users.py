@@ -20,7 +20,6 @@ def get_all_users(
 
 @router.get("/", response_model=schemas.User)
 def get_user(
-    # current_user: models.User = Depends(deps.get_current_user),
     username: str,
     db: Session = Depends(deps.get_db),
 ):

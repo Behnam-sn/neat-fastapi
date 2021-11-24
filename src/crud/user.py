@@ -7,13 +7,17 @@ from src.core.security import get_password_hash, verify_password
 from src import models, schemas
 
 
+def now():
+    return datetime.datetime.now().strftime("%Y/%m/%d %H:%M")
+
+
 def create_user(db: Session, user: schemas.UserCreate) -> models.User:
     db_user = models.User(
         username=user.username,
         hashed_password=get_password_hash(user.password),
         full_name=user.full_name,
-        created_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
-        modified_at=datetime.datetime.now().strftime("%Y/%m/%d %H:%M"),
+        created_at=now(),
+        modified_at=now(),
     )
     db.add(db_user)
     db.commit()
@@ -45,11 +49,7 @@ def update_user(db: Session, username: str, user_update: schemas.UserUpdate) -> 
     if db_user.full_name != update_data["full_name"]:
         setattr(db_user, "full_name", update_data["full_name"])
 
-    setattr(db_user, "modified_at",
-            datetime.datetime.now().strftime("%Y/%m/%d %H:%M"))
-
-    # for field, value in update_data.items():
-    #     setattr(db_user, field, value)
+    setattr(db_user, "modified_at", now())
 
     db.commit()
     db.refresh(db_user)
@@ -61,8 +61,7 @@ def update_password(db: Session, username: str, new_password: str) -> models.Use
 
     hashed_password = get_password_hash(new_password)
     setattr(db_user, "hashed_password", hashed_password)
-    setattr(db_user, "modified_at",
-            datetime.datetime.now().strftime("%Y/%m/%d %H:%M"))
+    setattr(db_user, "modified_at", now())
 
     db.commit()
     db.refresh(db_user)

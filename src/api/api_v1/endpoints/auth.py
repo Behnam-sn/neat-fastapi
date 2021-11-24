@@ -14,7 +14,10 @@ router = APIRouter()
 
 
 @router.post("/signup")
-def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
+def create_user(
+    user: schemas.UserCreate,
+    db: Session = Depends(deps.get_db)
+):
     db_user = crud.get_user_by_username(db, username=user.username)
 
     if db_user:
@@ -27,10 +30,15 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(deps.get_db)):
 
 
 @router.post("/login", response_model=schemas.Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(deps.get_db)
+):
 
     user = crud.user.authenticate_user(
-        db, username=form_data.username, password=form_data.password
+        db,
+        username=form_data.username,
+        password=form_data.password
     )
 
     if not user:
@@ -44,16 +52,15 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
     access_token = security.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username},
+        expires_delta=access_token_expires
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.post("/test-token", response_model=schemas.User)
-def test_token(current_user: models.User = Depends(deps.get_current_user)) -> Any:
-    """
-    Test access token
-    """
-
+def test_token(
+    current_user: models.User = Depends(deps.get_current_user)
+):
     return current_user
