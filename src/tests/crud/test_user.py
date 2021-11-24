@@ -67,18 +67,33 @@ def test_update_user(db: Session):
     create_random_user_by_api(username=username, password=password)
 
     new_username = random_lower_string()
-    new_password = random_lower_string()
+    full_name = random_lower_string()
 
     user_in_update = UserUpdate(
         username=new_username,
-        password=new_password,
-        full_name=random_lower_string()
+        full_name=full_name,
     )
+
     crud.update_user(db, username=username, user_update=user_in_update)
     user = crud.get_user_by_username(db, username=new_username)
 
     assert user
+    assert username != new_username
     assert user.full_name
+
+
+def test_update_password(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+
+    new_password = random_lower_string()
+
+    crud.update_password(db, username=username, new_password=new_password)
+    user = crud.get_user_by_username(db, username=username)
+
+    assert user
     assert verify_password(new_password, user.hashed_password)
 
 

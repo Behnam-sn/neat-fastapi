@@ -62,7 +62,7 @@ def update_note(db: Session, id: int, note_update: schemas.NoteUpdate) -> models
 
     update_data = note_update.dict(exclude_unset=True)
     update_data["modified_at"] = datetime.datetime.now().strftime(
-        "%Y/%m/%d %H:%M"),
+        "%Y/%m/%d %H:%M")
 
     for field, value in update_data.items():
         setattr(db_note, field, value)

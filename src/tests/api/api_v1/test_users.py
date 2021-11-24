@@ -58,11 +58,9 @@ def test_get_user():
     password = random_lower_string()
 
     create_random_user_by_api(username=username, password=password)
-    token = user_authentication_headers(username=username, password=password)
 
     response = client.get(
-        f"{settings.API_V1_STR}/users/",
-        headers=token,
+        f"{settings.API_V1_STR}/users/?username={username}"
     )
     user = response.json()
 
@@ -93,6 +91,27 @@ def test_update_user():
     assert user["full_name"] == data["full_name"]
 
 
+def test_update_password():
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    token = user_authentication_headers(username=username, password=password)
+
+    data = {
+        "password": password,
+        "new_password": random_lower_string(),
+    }
+
+    response = client.put(
+        f"{settings.API_V1_STR}/users/password",
+        headers=token,
+        json=data
+    )
+
+    assert response.status_code == 200
+
+
 def test_delete_user():
     username = random_lower_string()
     password = random_lower_string()
@@ -101,7 +120,7 @@ def test_delete_user():
     token = user_authentication_headers(username=username, password=password)
 
     response = client.delete(
-        f"{settings.API_V1_STR}/users/",
+        f"{settings.API_V1_STR}/users/?password={password}",
         headers=token,
     )
     user = response.json()
