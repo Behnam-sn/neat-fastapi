@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from src import models, schemas
 
@@ -61,6 +62,39 @@ def get_note_by_id(db: Session, id: int) -> Optional[models.Note]:
         db.query(models.Note)
         .filter(models.Note.id == id)
         .first()
+    )
+
+
+def search_all_public_notes(db: Session, text: str, skip: int = 0, limit: int = 100) -> List[models.Note]:
+    return (
+        db.query(models.Note)
+        .order_by(models.Note.id.desc())
+        .filter(or_(models.Note.title.like(f"%{text}%"), models.Note.content.like(f"%{text}%")), models.Note.public == 1)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def search_public_notes_by_author(db: Session, text: str, author: str, skip: int = 0, limit: int = 100) -> List[models.Note]:
+    return (
+        db.query(models.Note)
+        .order_by(models.Note.id.desc())
+        .filter(or_(models.Note.title.like(f"%{text}%"), models.Note.content.like(f"%{text}%")), models.Note.author == author, models.Note.public == 1)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def search_notes_by_author(db: Session, text: str, author: str, skip: int = 0, limit: int = 100) -> List[models.Note]:
+    return (
+        db.query(models.Note)
+        .order_by(models.Note.id.desc())
+        .filter(or_(models.Note.title.like(f"%{text}%"), models.Note.content.like(f"%{text}%")), models.Note.author == author)
+        .offset(skip)
+        .limit(limit)
+        .all()
     )
 
 

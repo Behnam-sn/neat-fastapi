@@ -21,6 +21,8 @@ def get_all_public_notes(
 @router.get("/public-author", response_model=List[schemas.Note])
 def get_public_notes_by_author(
     author: str,
+    skip: int = 0,
+    limit: int = 100,
     db: Session = Depends(deps.get_db),
 ):
     db_user = crud.get_user_by_username(db, username=author)
@@ -28,7 +30,7 @@ def get_public_notes_by_author(
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return crud.get_public_notes_by_author(db, author=author)
+    return crud.get_public_notes_by_author(db, author=author, skip=skip, limit=limit)
 
 
 @router.get("/public-id", response_model=schemas.Note)
@@ -47,21 +49,47 @@ def get_public_note_by_id(
     return db_note
 
 
-@router.post("/", response_model=schemas.Note)
-def create_note(
-    note: schemas.NoteCreate,
+@router.get("/public-search-all", response_model=List[schemas.Note])
+def search_all_public_notes(
+    text: str,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(deps.get_db),
+):
+
+    return crud.search_all_public_notes(db, text=text, skip=skip, limit=limit)
+
+
+@router.get("/public-search-author", response_model=List[schemas.Note])
+def search_public_notes_by_author(
+    text: str,
+    author: str,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(deps.get_db),
+):
+    return crud.search_public_notes_by_author(db, text=text, author=author, skip=skip, limit=limit)
+
+
+@router.get("/search", response_model=List[schemas.Note])
+def search_current_user_notes(
+    text: str,
+    skip: int = 0,
+    limit: int = 100,
     current_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
 ):
-    return crud.create_note(db, note=note, author=current_user.username)
+    return crud.search_notes_by_author(db, text=text, author=current_user.username, skip=skip, limit=limit)
 
 
 @router.get("/", response_model=List[schemas.Note])
 def get_current_user_notes(
+    skip: int = 0,
+    limit: int = 100,
     current_user: models.User = Depends(deps.get_current_user),
     db: Session = Depends(deps.get_db),
 ):
-    return crud.get_notes_by_author(db, author=current_user.username)
+    return crud.get_notes_by_author(db, author=current_user.username, skip=skip, limit=limit)
 
 
 @router.get("/id", response_model=schemas.Note)
@@ -79,6 +107,15 @@ def get_note_by_id(
         raise HTTPException(status_code=204, detail="Note is not Public")
 
     return db_note
+
+
+@router.post("/", response_model=schemas.Note)
+def create_note(
+    note: schemas.NoteCreate,
+    current_user: models.User = Depends(deps.get_current_user),
+    db: Session = Depends(deps.get_db),
+):
+    return crud.create_note(db, note=note, author=current_user.username)
 
 
 @router.put("/", response_model=schemas.Note)
