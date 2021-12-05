@@ -163,3 +163,56 @@ def test_get_public_note_by_id(db: Session):
     assert stored_note["title"] == note.title
     assert stored_note["content"] == note.content
     assert stored_note["public"] == note.public
+
+
+def test_search_all_public_notes(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    note = creat_random_note(db, public=True, author=username)
+
+    response = client.get(
+        f"{settings.API_V1_STR}/notes/public-search-all?text={note.title}",
+    )
+    search_result = response.json()
+
+    assert response.status_code == 200
+    assert len(search_result) >= 1
+
+
+def test_search_public_notes_by_author(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    note = creat_random_note(db, public=True, author=username)
+
+    response = client.get(
+        f"{settings.API_V1_STR}/notes/public-search-author?text={note.title}&author={note.author}",
+    )
+    search_result = response.json()
+
+    assert response.status_code == 200
+    assert len(search_result) == 1
+    assert search_result[0]["author"] == username
+
+
+def test_search_current_user_notes(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    token = user_authentication_headers(username=username, password=password)
+    note = creat_random_note(db, public=False, author=username)
+
+    response = client.get(
+        f"{settings.API_V1_STR}/notes/search?text={note.title}",
+        headers=token,
+    )
+    search_result = response.json()
+
+    assert response.status_code == 200
+    assert len(search_result) == 1
+    assert search_result[0]["author"] == username
+    assert search_result[0]["public"] == False

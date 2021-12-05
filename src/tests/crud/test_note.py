@@ -31,30 +31,6 @@ def test_create_private_note(db: Session):
     assert note.public == False
 
 
-def test_get_all_public_notes(db: Session):
-    username = random_lower_string()
-    password = random_lower_string()
-
-    create_random_user_by_api(username=username, password=password)
-
-    creat_random_note(db, public=True, author=username)
-    notes = crud.get_all_public_notes(db)
-
-    assert notes
-
-
-def test_get_public_notes_by_author(db: Session):
-    username = random_lower_string()
-    password = random_lower_string()
-
-    create_random_user_by_api(username=username, password=password)
-
-    creat_random_note(db, public=True, author=username)
-    notes = crud.get_public_notes_by_author(db, author=username)
-
-    assert len(notes) == 1
-
-
 def test_get_notes_by_author(db: Session):
     username = random_lower_string()
     password = random_lower_string()
@@ -117,3 +93,71 @@ def test_remove_note(db: Session):
 
     assert stored_note is None
     assert delete_note == note
+
+
+def test_get_all_public_notes(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+
+    creat_random_note(db, public=True, author=username)
+    notes = crud.get_all_public_notes(db)
+
+    assert notes
+
+
+def test_get_public_notes_by_author(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+
+    creat_random_note(db, public=True, author=username)
+    notes = crud.get_public_notes_by_author(db, author=username)
+
+    assert len(notes) == 1
+
+
+def test_search_all_public_notes(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    note = creat_random_note(db, public=True, author=username)
+    search_result = crud.search_all_public_notes(db, text=note.title)
+
+    assert len(search_result) == 1
+
+
+def test_search_public_notes_by_author(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    note = creat_random_note(db, public=True, author=username)
+    search_result = crud.search_public_notes_by_author(
+        db,
+        text=note.title,
+        author=username
+    )
+
+    assert len(search_result) == 1
+    assert search_result[0].author == username
+
+
+def test_search_notes_by_author(db: Session):
+    username = random_lower_string()
+    password = random_lower_string()
+
+    create_random_user_by_api(username=username, password=password)
+    note = creat_random_note(db, public=False, author=username)
+    search_result = crud.search_notes_by_author(
+        db,
+        text=note.title,
+        author=username
+    )
+
+    assert len(search_result) == 1
+    assert search_result[0].author == username
+    assert search_result[0].public == False
