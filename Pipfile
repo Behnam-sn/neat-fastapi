@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 pydantic = "*"
 passlib = {extras = ["bcrypt"], version = "*"}
 python-jose = {extras = ["cryptography"], version = "*"}
@@ -14,7 +15,6 @@ async-exit-stack = "*"
 async-generator = "*"
 
 [dev-packages]
-uvicorn = {extras = ["standard"], version = "*"}
 pytest = "*"
 requests = "*"
 autopep8 = "*"
