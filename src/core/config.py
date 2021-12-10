@@ -16,7 +16,7 @@ class Settings(BaseSettings):
         "https://localhost:3000",
         "http://localhost:5000",
         "https://localhost:5000",
-        "https://condescending-bartik-1ef502.netlify.app"
+        "https://behnamneat.netlify.app/"
     ]
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
