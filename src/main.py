@@ -1,10 +1,10 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.database.session import Base, engine
 from src.api.api_v1.api import api_router
 from src.core.config import settings
-
+from src.database.session import Base, engine
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,3 +24,6 @@ if settings.BACKEND_CORS_ORIGINS:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host='127.0.0.1')
