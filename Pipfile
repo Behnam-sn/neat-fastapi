@@ -6,13 +6,11 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
-pydantic = "*"
 passlib = {extras = ["bcrypt"], version = "*"}
 python-jose = {extras = ["cryptography"], version = "*"}
-python-multipart = "*"
 sqlalchemy = "*"
-async-exit-stack = "*"
-async-generator = "*"
+alembic = "*"
+psycopg2 = "*"
 
 [dev-packages]
 pytest = "*"
