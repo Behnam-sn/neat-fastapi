@@ -48,7 +48,7 @@ def test_get_current_user_notes(db: Session):
     )
     notes = response.json()
 
-    assert len(notes) == 1
+    assert len(notes) == True
 
 
 def test_get_note_by_id(db: Session):
@@ -143,7 +143,7 @@ def test_get_public_notes_by_author(db: Session):
     notes = response.json()
 
     assert response.status_code == 200
-    assert len(notes) == 1
+    assert len(notes) == True
 
 
 def test_get_public_note_by_id(db: Session):
@@ -194,7 +194,7 @@ def test_search_public_notes_by_author(db: Session):
     search_result = response.json()
 
     assert response.status_code == 200
-    assert len(search_result) == 1
+    assert len(search_result) == True
     assert search_result[0]["author"] == username
 
 
@@ -213,6 +213,6 @@ def test_search_current_user_notes(db: Session):
     search_result = response.json()
 
     assert response.status_code == 200
-    assert len(search_result) == 1
+    assert len(search_result) == True
     assert search_result[0]["author"] == username
     assert search_result[0]["public"] == False

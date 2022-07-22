@@ -27,7 +27,7 @@ def get_all_public_notes(db: Session, skip: int = 0, limit: int = 100) -> List[m
     return (
         db.query(models.Note)
         .order_by(models.Note.id.desc())
-        .filter(models.Note.public == 1)
+        .filter(models.Note.public == True)
         .offset(skip)
         .limit(limit)
         .all()
@@ -38,7 +38,7 @@ def get_public_notes_by_author(db: Session, author: str, skip: int = 0, limit: i
     return (
         db.query(models.Note)
         .order_by(models.Note.id.desc())
-        .filter(models.Note.author == author, models.Note.public == 1)
+        .filter(models.Note.author == author, models.Note.public == True)
         .offset(skip)
         .limit(limit)
         .all()
@@ -68,7 +68,7 @@ def search_all_public_notes(db: Session, text: str, skip: int = 0, limit: int = 
     return (
         db.query(models.Note)
         .order_by(models.Note.id.desc())
-        .filter(or_(models.Note.title.like(f"%{text}%"), models.Note.content.like(f"%{text}%")), models.Note.public == 1)
+        .filter(or_(models.Note.title.like(f"%{text}%"), models.Note.content.like(f"%{text}%")), models.Note.public == True)
         .offset(skip)
         .limit(limit)
         .all()
@@ -79,7 +79,7 @@ def search_public_notes_by_author(db: Session, text: str, author: str, skip: int
     return (
         db.query(models.Note)
         .order_by(models.Note.id.desc())
-        .filter(or_(models.Note.title.like(f"%{text}%"), models.Note.content.like(f"%{text}%")), models.Note.author == author, models.Note.public == 1)
+        .filter(or_(models.Note.title.like(f"%{text}%"), models.Note.content.like(f"%{text}%")), models.Note.author == author, models.Note.public == True)
         .offset(skip)
         .limit(limit)
         .all()

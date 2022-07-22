@@ -40,7 +40,7 @@ def test_get_notes_by_author(db: Session):
     creat_random_note(db, public=False, author=username)
     notes = crud.get_notes_by_author(db, author=username)
 
-    assert len(notes) == 1
+    assert len(notes) == True
 
 
 def test_get_note_by_id(db: Session):
@@ -116,7 +116,7 @@ def test_get_public_notes_by_author(db: Session):
     creat_random_note(db, public=True, author=username)
     notes = crud.get_public_notes_by_author(db, author=username)
 
-    assert len(notes) == 1
+    assert len(notes) == True
 
 
 def test_search_all_public_notes(db: Session):
@@ -127,7 +127,7 @@ def test_search_all_public_notes(db: Session):
     note = creat_random_note(db, public=True, author=username)
     search_result = crud.search_all_public_notes(db, text=note.title)
 
-    assert len(search_result) == 1
+    assert len(search_result) == True
 
 
 def test_search_public_notes_by_author(db: Session):
@@ -142,7 +142,7 @@ def test_search_public_notes_by_author(db: Session):
         author=username
     )
 
-    assert len(search_result) == 1
+    assert len(search_result) == True
     assert search_result[0].author == username
 
 
@@ -158,6 +158,6 @@ def test_search_notes_by_author(db: Session):
         author=username
     )
 
-    assert len(search_result) == 1
+    assert len(search_result) == True
     assert search_result[0].author == username
     assert search_result[0].public == False
