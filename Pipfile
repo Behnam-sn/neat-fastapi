@@ -8,6 +8,7 @@ fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 python-jose = {extras = ["cryptography"], version = "*"}
+python-multipart = "*"
 sqlalchemy = "*"
 alembic = "*"
 psycopg2 = "*"
