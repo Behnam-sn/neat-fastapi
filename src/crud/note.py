@@ -1,9 +1,8 @@
 import datetime
 from typing import List, Optional
 
-from sqlalchemy.orm import Session
 from sqlalchemy import or_
-
+from sqlalchemy.orm import Session
 from src import models, schemas
 
 

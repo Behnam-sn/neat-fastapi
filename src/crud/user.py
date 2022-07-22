@@ -1,10 +1,9 @@
 import datetime
-from typing import Optional, List
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
-
-from src.core.security import get_password_hash, verify_password
 from src import models, schemas
+from src.core.security import get_password_hash, verify_password
 
 
 def now():

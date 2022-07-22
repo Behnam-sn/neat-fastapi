@@ -3,7 +3,6 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
 from src import crud, models, schemas
 from src.api import deps
 from src.core import security
